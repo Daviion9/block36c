@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model customers {
+  customers_id         Int                    @id
+  customers_name       String?                @db.VarChar(50)
+  customers_restaurant customers_restaurant[]
+}
+
+model customers_restaurant {
+  customers_id  Int
+  restaurant_id Int
+  customers     customers  @relation(fields: [customers_id], references: [customers_id], onDelete: NoAction, onUpdate: NoAction)
+  restaurant    restaurant @relation(fields: [restaurant_id], references: [restaurant_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([customers_id, restaurant_id])
+}
+
+model restaurant {
+  restaurant_id        Int                    @id
+  restaurant_name      String?                @db.VarChar(50)
+  customers_restaurant customers_restaurant[]
+}
